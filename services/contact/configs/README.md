@@ -1,2 +1,2 @@
 
-Configurations for service work.
+Configurations for (to start) service work.

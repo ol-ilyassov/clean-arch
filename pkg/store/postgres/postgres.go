@@ -55,7 +55,7 @@ func init() {
 func initDefaultEnv() error {
 	// read from env variables.
 	if len(os.Getenv("PGHOST")) == 0 {
-		if err := os.Setenv("PGHOST", "192.168.72.200"); err != nil {
+		if err := os.Setenv("PGHOST", "localhost"); err != nil {
 			return errors.WithStack(err)
 		}
 	}
@@ -70,7 +70,7 @@ func initDefaultEnv() error {
 		}
 	}
 	if len(os.Getenv("PGUSER")) == 0 {
-		if err := os.Setenv("PGUSER", "tester"); err != nil {
+		if err := os.Setenv("PGUSER", "test"); err != nil {
 			return errors.WithStack(err)
 		}
 	}

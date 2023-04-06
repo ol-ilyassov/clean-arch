@@ -10,7 +10,7 @@ import (
 )
 
 func init() {
-	viper.SetDefault("HTTP_PORT", 80)
+	viper.SetDefault("HTTP_PORT", 34777)
 	viper.SetDefault("HTTP_HOST", "127.0.0.1")
 	viper.SetDefault("IS_PRODUCTION", "false")
 }

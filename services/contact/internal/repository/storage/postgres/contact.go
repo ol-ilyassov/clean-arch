@@ -11,7 +11,7 @@ func (r *Repository) CreateContact(contacts ...*contact.Contact) ([]*contact.Con
 	panic("implement me")
 }
 
-func (r *Repository) UpdateContact(ID, updateFn func(c *contact.Contact) (*contact.Contact, error)) (*contact.Contact, error) {
+func (r *Repository) UpdateContact(ID uuid.UUID, updateFn func(c *contact.Contact) (*contact.Contact, error)) (*contact.Contact, error) {
 	panic("implement me")
 }
 

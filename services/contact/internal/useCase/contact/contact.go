@@ -1,6 +1,8 @@
 package contact
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 
 	"ol-ilyassov/clean_arch/pkg/type/queryParameter"
@@ -8,31 +10,38 @@ import (
 )
 
 func (uc *UseCase) Create(contacts ...*contact.Contact) ([]*contact.Contact, error) {
-	// TODO implement me
-	panic("implement me")
+	return uc.adapterStorage.CreateContact(contacts...)
 }
 
 func (uc *UseCase) Update(contactUpdate contact.Contact) (*contact.Contact, error) {
-	// TODO implement me
-	panic("implement me")
+	return uc.adapterStorage.UpdateContact(contactUpdate.ID(), func(oldContact *contact.Contact) (*contact.Contact, error) {
+		return contact.NewWithID(
+			oldContact.ID(),
+			oldContact.CreatedAt(),
+			time.Now().UTC(),
+			contactUpdate.PhoneNumber(),
+			contactUpdate.Email(),
+			contactUpdate.Name(),
+			contactUpdate.Surname(),
+			contactUpdate.Patronymic(),
+			contactUpdate.Age(),
+			contactUpdate.Gender(),
+		)
+	})
 }
 
 func (uc *UseCase) Delete(ID uuid.UUID) error {
-	// TODO implement me
-	panic("implement me")
+	return uc.adapterStorage.DeleteContact(ID)
 }
 
 func (uc *UseCase) List(parameter queryParameter.QueryParameter) ([]*contact.Contact, error) {
-	// TODO implement me
-	panic("implement me")
+	return uc.adapterStorage.ListContact(parameter)
 }
 
 func (uc *UseCase) ReadByID(ID uuid.UUID) (response *contact.Contact, err error) {
-	// TODO implement me
-	panic("implement me")
+	return uc.adapterStorage.ReadContactByID(ID)
 }
 
 func (uc *UseCase) Count() (uint64, error) {
-	// TODO implement me
-	panic("implement me")
+	return uc.adapterStorage.CountContact()
 }

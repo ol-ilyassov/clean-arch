@@ -6,7 +6,7 @@ import (
 )
 
 type QueryParameter struct {
-	Sorts      sort.Sort
+	Sorts      sort.Sorts
 	Pagination pagination.Pagination
 	// тут можно добавить фильтр.
 }

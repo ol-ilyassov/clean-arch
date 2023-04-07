@@ -31,6 +31,7 @@ type Sorts []*Sort
 func (s Sorts) Parsing(mapping map[columnCode.ColumnCode]string) []string {
 	var result []string
 	for _, sort := range s {
+
 		result = append(result, sort.Parsing(mapping))
 	}
 	return result

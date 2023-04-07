@@ -15,12 +15,13 @@ import (
 	"ol-ilyassov/clean_arch/pkg/tools/transaction"
 	"ol-ilyassov/clean_arch/pkg/type/columnCode"
 	"ol-ilyassov/clean_arch/pkg/type/queryParameter"
+
 	"ol-ilyassov/clean_arch/services/contact/internal/domain/contact"
 	"ol-ilyassov/clean_arch/services/contact/internal/domain/group"
 	"ol-ilyassov/clean_arch/services/contact/internal/repository/storage/postgres/dao"
 )
 
-var mappingSortGroup = map[columnCode.ColumnCode]string{
+var mappingSort = map[columnCode.ColumnCode]string{
 	"id":          "id",
 	"name":        "name",
 	"description": "description",
@@ -209,7 +210,7 @@ func (r *Repository) listGroupTx(ctx context.Context, tx pgx.Tx, parameter query
 	builder = builder.Where(squirrel.Eq{"is_archived": false})
 
 	if len(parameter.Sorts) > 0 {
-		builder = builder.OrderBy(parameter.Sorts.Parsing(mappingSortGroup)...)
+		builder = builder.OrderBy(parameter.Sorts.Parsing(mappingSort)...)
 	} else {
 		builder = builder.OrderBy("created_at DESC")
 	}
@@ -320,7 +321,7 @@ func (r *Repository) CountGroup() (uint64, error) {
 	return total, nil
 }
 
-func (r *Repository) updateGroupsContactCountByFilters(ctx context.Context, tx pgx.Tx, ID uuid.UUID) error {
+func (r *Repository) UpdateGroupsContactCountByFilters(ctx context.Context, tx pgx.Tx, ID uuid.UUID) error {
 
 	builder := r.genSQL.Select("contact_in_group.group_id").
 		From("slurm.contact_in_group").
@@ -383,15 +384,11 @@ func (r *Repository) updateGroupContactCount(ctx context.Context, tx pgx.Tx, gro
 	return nil
 }
 
-// --------------------------------------------------------------
+// ------------------------------------------------------------
 
-// --------------------------------------------------------------
+// ------------------------------------------------------------
 
-// --------------------------------------------------------------
-
-// --------------------------------------------------------------
-
-// --------------------------------------------------------------
+// ------------------------------------------------------------
 
 func (r *Repository) CreateContactIntoGroup(groupID uuid.UUID, contacts ...*contact.Contact) ([]*contact.Contact, error) {
 	var ctx = context.Background()
@@ -404,7 +401,7 @@ func (r *Repository) CreateContactIntoGroup(groupID uuid.UUID, contacts ...*cont
 		err = transaction.Finish(ctx, t, err)
 	}(ctx, tx)
 
-	response, err := r.createContactTx(ctx, tx, contacts...)
+	response, err := r.repoContact.CreateContactTx(ctx, tx, contacts...)
 	if err != nil {
 		return nil, err
 	}

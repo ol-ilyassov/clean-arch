@@ -32,15 +32,16 @@ var mappingSortContact = map[columnCode.ColumnCode]string{
 
 func (r *Repository) CreateContact(contacts ...*contact.Contact) ([]*contact.Contact, error) {
 	var ctx = context.Background()
-	tx, err := r.db.Begin(ctx)
+	tx, err := r.db.Begin(ctx) // transaction start.
 	if err != nil {
 		return nil, err
 	}
 
 	defer func(ctx context.Context, t pgx.Tx) {
-		err = transaction.Finish(ctx, t, err)
-	}(ctx, tx)
+		err = transaction.Finish(ctx, t, err) // transaction end declaration.
+	}(ctx, tx) // our written Finish function decides Commit or Rollback on the base of error.
 
+	// main creation function.
 	response, err := r.createContactTx(ctx, tx, contacts...)
 	if err != nil {
 		return nil, err
@@ -49,10 +50,13 @@ func (r *Repository) CreateContact(contacts ...*contact.Contact) ([]*contact.Con
 }
 
 func (r *Repository) createContactTx(ctx context.Context, tx pgx.Tx, contacts ...*contact.Contact) ([]*contact.Contact, error) {
+	// no contacts to create.
 	if len(contacts) == 0 {
 		return []*contact.Contact{}, nil
 	}
 
+	// CopyFrom function is good for large number of data to import(as example), or create.
+	// Difficulty case, make check, is some contact with same name, surname exists(?).
 	_, err := tx.CopyFrom(
 		ctx,
 		pgx.Identifier{"slurm", "contact"},
@@ -177,6 +181,7 @@ func (r *Repository) deleteContactTx(ctx context.Context, tx pgx.Tx, ID uuid.UUI
 		return err
 	}
 
+	// check is contact exists in group and delete it from them.
 	if err = r.updateGroupsContactCountByFilters(ctx, tx, ID); err != nil {
 		return err
 	}
@@ -225,6 +230,7 @@ func (r *Repository) listContactTx(ctx context.Context, tx pgx.Tx, parameter que
 	builder = builder.Where(squirrel.Eq{"is_archived": false})
 
 	if len(parameter.Sorts) > 0 {
+		// parsing for converting values to string for SQL query.
 		builder = builder.OrderBy(parameter.Sorts.Parsing(mappingSortContact)...)
 	} else {
 		builder = builder.OrderBy("created_at DESC")
@@ -252,9 +258,13 @@ func (r *Repository) listContactTx(ctx context.Context, tx pgx.Tx, parameter que
 		return nil, err
 	}
 
+	// converter.go => Convert to Domain representation.
 	return r.toDomainContacts(daoContacts)
 }
 
+// there could be the use of filters.
+// there could be a wrapper of listContactTx with Limit 1.
+// So by basic written oneContactTx is duplicate for listContactTx, first one could be erased.
 func (r *Repository) ReadContactByID(ID uuid.UUID) (response *contact.Contact, err error) {
 	var ctx = context.Background()
 

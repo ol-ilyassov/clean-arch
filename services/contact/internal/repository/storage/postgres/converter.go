@@ -35,6 +35,7 @@ func (r Repository) toCopyFromSource(contacts ...*contact.Contact) pgx.CopyFromS
 }
 
 func (r Repository) toDomainContact(dao *dao.Contact) (*contact.Contact, error) {
+	// constructors stores validation.
 	nameObject, err := name.New(dao.Name)
 	if err != nil {
 		return nil, err
@@ -78,6 +79,7 @@ func (r Repository) toDomainContact(dao *dao.Contact) (*contact.Contact, error) 
 	return result, nil
 }
 
+// Convert to Domain representation.
 func (r Repository) toDomainContacts(dao []*dao.Contact) ([]*contact.Contact, error) {
 	var result = make([]*contact.Contact, len(dao))
 	for i, v := range dao {

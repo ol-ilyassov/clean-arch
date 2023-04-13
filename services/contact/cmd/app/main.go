@@ -32,9 +32,9 @@ func main() {
 	// }
 
 	repoStorage, err := repositoryStorage.New(conn.Pool, repositoryStorage.Options{})
-	if err != nil {
-		panic(err)
-	}
+	// if err != nil {
+	// 	panic(err)
+	// }
 
 	var (
 		ucContact = useCaseContact.New(repoStorage, useCaseContact.Options{})

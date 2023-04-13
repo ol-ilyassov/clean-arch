@@ -15,6 +15,16 @@ func init() {
 	viper.SetDefault("IS_PRODUCTION", "false")
 }
 
+// @title slurm contact service on clean architecture
+// @version 1.0
+// @description contact service on clean architecture
+// @license.name kolyadkons
+
+// @contact.name API Support
+// @contact.email kolyadkons@gmail.com
+
+// @BasePath /
+
 type Delivery struct {
 	ucContact useCase.Contact
 	ucGroup   useCase.Group

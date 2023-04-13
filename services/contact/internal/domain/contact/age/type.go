@@ -7,8 +7,8 @@ import (
 )
 
 var (
-	MaxLength      uint64 = 200
-	ErrWrongLength        = errors.Errorf("age must be less than or equal to %d", MaxLength)
+	MaxLength      uint8 = 200
+	ErrWrongLength       = errors.Errorf("age must be less than or equal to %d", MaxLength)
 )
 
 type Age uint8
@@ -17,7 +17,7 @@ func (a Age) String() string {
 	return strconv.FormatUint(uint64(a), 10)
 }
 
-func New(age uint64) (*Age, error) {
+func New(age uint8) (*Age, error) {
 	if age > MaxLength {
 		return nil, ErrWrongLength
 	}

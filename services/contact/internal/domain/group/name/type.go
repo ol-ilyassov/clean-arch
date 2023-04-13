@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	MaxLength      = 250
+	MaxLength      = 50
 	ErrWrongLength = errors.Errorf("name must be less than or equal to %d characters", MaxLength)
 )
 

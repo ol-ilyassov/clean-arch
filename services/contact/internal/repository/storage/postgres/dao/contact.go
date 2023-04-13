@@ -18,8 +18,8 @@ type Contact struct {
 	Surname    string `db:"surname"`
 	Patronymic string `db:"patronymic"`
 
-	Age    uint64 `db:"age"`
-	Gender uint8  `db:"gender"`
+	Age    uint8 `db:"age"`
+	Gender uint8 `db:"gender"`
 }
 
 var CreateColumnContact = []string{

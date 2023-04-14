@@ -1,8 +1,8 @@
 package postgres
 
 import (
-	"context"
 	"ol-ilyassov/clean_arch/pkg/tools/transaction"
+	"ol-ilyassov/clean_arch/pkg/type/context"
 	"ol-ilyassov/clean_arch/pkg/type/queryParameter"
 	"ol-ilyassov/clean_arch/services/contact/internal/domain/contact"
 	"ol-ilyassov/clean_arch/services/contact/internal/repository/contact/postgres/dao"
@@ -11,8 +11,9 @@ import (
 	"github.com/jackc/pgx/v4"
 )
 
-func (r *Repository) CreateContact(contacts ...*contact.Contact) ([]*contact.Contact, error) {
-	var ctx = context.Background()
+func (r *Repository) CreateContact(c context.Context, contacts ...*contact.Contact) ([]*contact.Contact, error) {
+	ctx := c.CopyWithTimeout(r.options.Timeout)
+	defer ctx.Cancel()
 	tx, err := r.db.Begin(ctx)
 	if err != nil {
 		return nil, err
@@ -47,22 +48,22 @@ func (r *Repository) CreateContactTx(ctx context.Context, tx pgx.Tx, contacts ..
 	return contacts, nil
 }
 
-func (r *Repository) UpdateContact(ID uuid.UUID, updateFn func(c *contact.Contact) (*contact.Contact, error)) (*contact.Contact, error) {
+func (r *Repository) UpdateContact(c context.Context, ID uuid.UUID, updateFn func(c *contact.Contact) (*contact.Contact, error)) (*contact.Contact, error) {
 	panic("implement me")
 }
 
-func (r *Repository) DeleteContact(ID uuid.UUID) error {
+func (r *Repository) DeleteContact(c context.Context, ID uuid.UUID) error {
 	panic("implement me")
 }
 
-func (r *Repository) ListContact(parameter queryParameter.QueryParameter) ([]*contact.Contact, error) {
+func (r *Repository) ListContact(c context.Context, parameter queryParameter.QueryParameter) ([]*contact.Contact, error) {
 	panic("implement me")
 }
 
-func (r *Repository) ReadContactByID(ID uuid.UUID) (response *contact.Contact, err error) {
+func (r *Repository) ReadContactByID(c context.Context, ID uuid.UUID) (response *contact.Contact, err error) {
 	panic("implement me")
 }
 
-func (r *Repository) CountContact() (uint64, error) {
+func (r *Repository) CountContact(ctx context.Context) (uint64, error) {
 	panic("implement me")
 }

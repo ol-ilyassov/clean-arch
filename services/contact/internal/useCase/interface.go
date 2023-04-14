@@ -1,6 +1,7 @@
 package useCase
 
 import (
+	"ol-ilyassov/clean_arch/pkg/type/context"
 	"ol-ilyassov/clean_arch/pkg/type/queryParameter"
 	"ol-ilyassov/clean_arch/services/contact/internal/domain/contact"
 	"ol-ilyassov/clean_arch/services/contact/internal/domain/group"
@@ -15,40 +16,40 @@ import (
 // Filter should be separated struct and could be used for Count methods, etc...
 
 type Contact interface {
-	Create(contacts ...*contact.Contact) ([]*contact.Contact, error)
-	Update(contact contact.Contact) (*contact.Contact, error)
+	Create(c context.Context, contacts ...*contact.Contact) ([]*contact.Contact, error)
+	Update(c context.Context, contact contact.Contact) (*contact.Contact, error)
 
 	// addition of filter use in Delete method, will be good option.
-	Delete(ID uuid.UUID /*Тут можно передавать фильтр*/) error
+	Delete(c context.Context, ID uuid.UUID /*Тут можно передавать фильтр*/) error
 
 	ContactReader
 }
 
 type ContactReader interface {
-	List(parameter queryParameter.QueryParameter) ([]*contact.Contact, error)
-	ReadByID(ID uuid.UUID) (response *contact.Contact, err error)
-	Count( /*Тут можно передавать фильтр*/ ) (uint64, error)
+	List(c context.Context, parameter queryParameter.QueryParameter) ([]*contact.Contact, error)
+	ReadByID(c context.Context, ID uuid.UUID) (response *contact.Contact, err error)
+	Count(c context.Context /*Тут можно передавать фильтр*/) (uint64, error)
 }
 
 // -------------------
 
 type Group interface {
-	Create(domainGroup *group.Group) (*group.Group, error)
-	Update(group *group.Group) (*group.Group, error)
-	Delete(ID uuid.UUID /*Тут можно передавать фильтр*/) error
+	Create(c context.Context, domainGroup *group.Group) (*group.Group, error)
+	Update(c context.Context, group *group.Group) (*group.Group, error)
+	Delete(c context.Context, ID uuid.UUID /*Тут можно передавать фильтр*/) error
 
 	GroupReader
 	ContactInGroup
 }
 
 type GroupReader interface {
-	List(parameter queryParameter.QueryParameter) ([]*group.Group, error)
-	ReadByID(ID uuid.UUID) (*group.Group, error)
-	Count( /*Тут можно передавать фильтр*/ ) (uint64, error)
+	List(c context.Context, parameter queryParameter.QueryParameter) ([]*group.Group, error)
+	ReadByID(c context.Context, ID uuid.UUID) (*group.Group, error)
+	Count(c context.Context /*Тут можно передавать фильтр*/) (uint64, error)
 }
 
 type ContactInGroup interface {
-	CreateContactIntoGroup(groupID uuid.UUID, contacts ...*contact.Contact) ([]*contact.Contact, error)
-	AddContactToGroup(groupID, contactID uuid.UUID) error
-	DeleteContactFromGroup(groupID, contactID uuid.UUID) error
+	CreateContactIntoGroup(c context.Context, groupID uuid.UUID, contacts ...*contact.Contact) ([]*contact.Contact, error)
+	AddContactToGroup(c context.Context, groupID, contactID uuid.UUID) error
+	DeleteContactFromGroup(c context.Context, groupID, contactID uuid.UUID) error
 }

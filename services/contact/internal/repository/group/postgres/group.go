@@ -1,9 +1,9 @@
 package postgres
 
 import (
-	"context"
 	"database/sql"
 	"errors"
+	"ol-ilyassov/clean_arch/pkg/type/context"
 	"time"
 
 	"github.com/Masterminds/squirrel"
@@ -27,7 +27,11 @@ var mappingSort = map[columnCode.ColumnCode]string{
 	"description": "description",
 }
 
-func (r *Repository) CreateGroup(group *group.Group) (*group.Group, error) {
+func (r *Repository) CreateGroup(c context.Context, group *group.Group) (*group.Group, error) {
+
+	ctx := c.CopyWithTimeout(r.options.Timeout)
+	defer ctx.Cancel()
+
 	query, args, err := r.genSQL.Insert("slurm.group").
 		Columns(
 			"id",
@@ -46,7 +50,6 @@ func (r *Repository) CreateGroup(group *group.Group) (*group.Group, error) {
 	if err != nil {
 		return nil, err
 	}
-	var ctx = context.Background()
 
 	if _, err = r.db.Exec(ctx, query, args...); err != nil {
 		return nil, err
@@ -54,8 +57,9 @@ func (r *Repository) CreateGroup(group *group.Group) (*group.Group, error) {
 	return group, nil
 }
 
-func (r *Repository) UpdateGroup(ID uuid.UUID, updateFn func(group *group.Group) (*group.Group, error)) (*group.Group, error) {
-	var ctx = context.Background()
+func (r *Repository) UpdateGroup(c context.Context, ID uuid.UUID, updateFn func(group *group.Group) (*group.Group, error)) (*group.Group, error) {
+	ctx := c.CopyWithTimeout(r.options.Timeout)
+	defer ctx.Cancel()
 
 	tx, err := r.db.Begin(ctx)
 	if err != nil {
@@ -110,8 +114,9 @@ func (r *Repository) UpdateGroup(ID uuid.UUID, updateFn func(group *group.Group)
 	return groupForUpdate, nil
 }
 
-func (r *Repository) DeleteGroup(ID uuid.UUID) error {
-	var ctx = context.Background()
+func (r *Repository) DeleteGroup(c context.Context, ID uuid.UUID) error {
+	ctx := c.CopyWithTimeout(r.options.Timeout)
+	defer ctx.Cancel()
 
 	tx, err := r.db.Begin(ctx)
 	if err != nil {
@@ -173,8 +178,9 @@ func (r *Repository) clearGroupTx(ctx context.Context, tx pgx.Tx, groupID uuid.U
 	return nil
 }
 
-func (r *Repository) ListGroup(parameter queryParameter.QueryParameter) ([]*group.Group, error) {
-	var ctx = context.Background()
+func (r *Repository) ListGroup(c context.Context, parameter queryParameter.QueryParameter) ([]*group.Group, error) {
+	ctx := c.CopyWithTimeout(r.options.Timeout)
+	defer ctx.Cancel()
 
 	tx, err := r.db.Begin(ctx)
 	if err != nil {
@@ -223,6 +229,9 @@ func (r *Repository) listGroupTx(ctx context.Context, tx pgx.Tx, parameter query
 	}
 
 	query, args, err := builder.ToSql()
+	if err != nil {
+		return nil, err
+	}
 	rows, err := tx.Query(ctx, query, args...)
 	if err != nil {
 		return nil, err
@@ -243,8 +252,9 @@ func (r *Repository) listGroupTx(ctx context.Context, tx pgx.Tx, parameter query
 	return result, nil
 }
 
-func (r *Repository) ReadGroupByID(ID uuid.UUID) (*group.Group, error) {
-	var ctx = context.Background()
+func (r *Repository) ReadGroupByID(c context.Context, ID uuid.UUID) (*group.Group, error) {
+	ctx := c.CopyWithTimeout(r.options.Timeout)
+	defer ctx.Cancel()
 
 	tx, err := r.db.Begin(ctx)
 	if err != nil {
@@ -279,6 +289,9 @@ func (r *Repository) oneGroupTx(ctx context.Context, tx pgx.Tx, ID uuid.UUID) (r
 	builder = builder.Where(squirrel.Eq{"is_archived": false, "id": ID})
 
 	query, args, err := builder.ToSql()
+	if err != nil {
+		return nil, err
+	}
 	rows, err := tx.Query(ctx, query, args...)
 	if err != nil {
 		return nil, err
@@ -297,8 +310,7 @@ func (r *Repository) oneGroupTx(ctx context.Context, tx pgx.Tx, ID uuid.UUID) (r
 
 }
 
-func (r *Repository) CountGroup() (uint64, error) {
-	var ctx = context.Background()
+func (r *Repository) CountGroup(ctx context.Context) (uint64, error) {
 
 	var builder = r.genSQL.Select(
 		"COUNT(id)",
@@ -390,8 +402,9 @@ func (r *Repository) updateGroupContactCount(ctx context.Context, tx pgx.Tx, gro
 
 // ------------------------------------------------------------
 
-func (r *Repository) CreateContactIntoGroup(groupID uuid.UUID, contacts ...*contact.Contact) ([]*contact.Contact, error) {
-	var ctx = context.Background()
+func (r *Repository) CreateContactIntoGroup(c context.Context, groupID uuid.UUID, contacts ...*contact.Contact) ([]*contact.Contact, error) {
+	ctx := c.CopyWithTimeout(r.options.Timeout)
+	defer ctx.Cancel()
 
 	tx, err := r.db.Begin(ctx)
 	if err != nil {
@@ -417,8 +430,9 @@ func (r *Repository) CreateContactIntoGroup(groupID uuid.UUID, contacts ...*cont
 	return response, nil
 }
 
-func (r *Repository) DeleteContactFromGroup(groupID, contactID uuid.UUID) error {
-	var ctx = context.Background()
+func (r *Repository) DeleteContactFromGroup(c context.Context, groupID, contactID uuid.UUID) error {
+	ctx := c.CopyWithTimeout(r.options.Timeout)
+	defer ctx.Cancel()
 
 	tx, err := r.db.Begin(ctx)
 	if err != nil {
@@ -448,8 +462,9 @@ func (r *Repository) DeleteContactFromGroup(groupID, contactID uuid.UUID) error 
 	return nil
 }
 
-func (r *Repository) AddContactsToGroup(groupID uuid.UUID, contactIDs ...uuid.UUID) error {
-	var ctx = context.Background()
+func (r *Repository) AddContactsToGroup(c context.Context, groupID uuid.UUID, contactIDs ...uuid.UUID) error {
+	ctx := c.CopyWithTimeout(r.options.Timeout)
+	defer ctx.Cancel()
 
 	tx, err := r.db.Begin(ctx)
 	if err != nil {

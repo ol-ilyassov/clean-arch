@@ -1,7 +1,7 @@
 package contact
 
 import (
-	"context"
+	"ol-ilyassov/clean_arch/pkg/type/context"
 	"ol-ilyassov/clean_arch/services/contact/internal/domain/contact"
 
 	"github.com/jackc/pgx/v4"

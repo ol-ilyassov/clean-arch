@@ -1,7 +1,7 @@
 package group
 
 import (
-	"context"
+	"ol-ilyassov/clean_arch/pkg/type/context"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4"

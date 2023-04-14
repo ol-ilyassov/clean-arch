@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -23,6 +24,7 @@ type Repository struct {
 }
 
 type Options struct {
+	Timeout       time.Duration
 	DefaultLimit  uint64
 	DefaultOffset uint64
 } // optional, example: request timer
@@ -44,6 +46,9 @@ func New(db *pgxpool.Pool, o Options) (*Repository, error) {
 func (r *Repository) SetOptions(options Options) {
 	if options.DefaultLimit == 0 {
 		options.DefaultLimit = 10
+	}
+	if options.Timeout == 0 {
+		options.Timeout = time.Second * 30
 	}
 
 	if r.options != options {

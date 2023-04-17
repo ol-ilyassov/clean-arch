@@ -1,6 +1,12 @@
 package contact
 
-import "ol-ilyassov/clean_arch/services/contact/internal/useCase/adapters/storage"
+import (
+	"ol-ilyassov/clean_arch/services/contact/internal/useCase/adapters/storage"
+
+	log "ol-ilyassov/clean_arch/pkg/type/logger"
+
+	"go.uber.org/zap"
+)
 
 // concrete struct implements interface of UseCase/contact interface
 
@@ -24,5 +30,6 @@ func New(storage storage.Contact, options Options) *UseCase {
 func (uc *UseCase) SetOptions(options Options) {
 	if uc.options != options {
 		uc.options = options
+		log.Info("set new options", zap.Any("options", uc.options))
 	}
 }

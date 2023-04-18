@@ -3,13 +3,14 @@ package http
 import (
 	"strings"
 
+	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
-
-	docs "ol-ilyassov/clean_arch/services/contact/internal/delivery/http/swagger/docs"
-
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+
+	"ol-ilyassov/clean_arch/pkg/type/logger"
+	docs "ol-ilyassov/clean_arch/services/contact/internal/delivery/http/swagger/docs"
 )
 
 func (d *Delivery) initRouter() *gin.Engine {
@@ -25,6 +26,10 @@ func (d *Delivery) initRouter() *gin.Engine {
 	}
 
 	var router = gin.New()
+
+	router.Use(Tracer())
+
+	router.Use(ginzap.RecoveryWithZap(logger.GetLogger(), true))
 
 	d.routerDocs(router.Group("/docs"))
 

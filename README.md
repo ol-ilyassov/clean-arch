@@ -1,2 +1,2 @@
-# slurm-clean-arch
-Slurm course on Clean Architecture pattern in Go
+# Clean Architecture
+Clean Architecture pattern in Go

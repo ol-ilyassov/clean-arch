@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jackc/pgx/v5/pgxpool"
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 	_ "github.com/spf13/viper/remote"
@@ -136,7 +136,7 @@ func New(settings Settings) (*Store, error) {
 	}
 
 	// context could be used with timer ...
-	conn, err := pgxpool.ConnectConfig(context.Background(), config)
+	conn, err := pgxpool.NewWithConfig(context.Background(), config)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

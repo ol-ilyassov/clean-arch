@@ -8,7 +8,7 @@ import (
 	"ol-ilyassov/clean_arch/services/contact/internal/repository/contact/postgres/dao"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v5"
 )
 
 func (r *Repository) CreateContact(c context.Context, contacts ...*contact.Contact) ([]*contact.Contact, error) {

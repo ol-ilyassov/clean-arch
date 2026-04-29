@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/Masterminds/squirrel"
-	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/spf13/viper"
 
 	"github.com/pressly/goose"

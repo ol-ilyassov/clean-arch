@@ -4,7 +4,7 @@ import (
 	"ol-ilyassov/clean_arch/pkg/type/context"
 	"ol-ilyassov/clean_arch/services/contact/internal/domain/contact"
 
-	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v5"
 )
 
 type Contact interface {

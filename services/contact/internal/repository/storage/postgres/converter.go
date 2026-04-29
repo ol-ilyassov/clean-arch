@@ -11,7 +11,7 @@ import (
 	"ol-ilyassov/clean_arch/services/contact/internal/domain/contact/surname"
 	"ol-ilyassov/clean_arch/services/contact/internal/repository/storage/postgres/dao"
 
-	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v5"
 )
 
 func (r Repository) toCopyFromSource(contacts ...*contact.Contact) pgx.CopyFromSource {

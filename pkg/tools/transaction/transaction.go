@@ -3,7 +3,7 @@ package transaction
 import (
 	"context"
 
-	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v5"
 )
 
 func Finish(ctx context.Context, tx pgx.Tx, err error) error {

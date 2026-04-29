@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/Masterminds/squirrel"
-	"github.com/georgysavva/scany/pgxscan"
+	"github.com/georgysavva/scany/v2/pgxscan"
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v5"
 
 	"ol-ilyassov/clean_arch/pkg/tools/converter"
 	"ol-ilyassov/clean_arch/pkg/tools/transaction"
